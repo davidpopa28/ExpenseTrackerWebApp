@@ -17,7 +17,7 @@ namespace ExpenseTrackerApp.Validations
                 .Must(password => password.FirstOrDefault(character => character >= 'A' && character <= 'Z') != 0)
                     .WithMessage("Password should contain at least one uppercase letter")
                 .Must(password => password.FirstOrDefault(character => character >= '0' && character <= '9') != 0)
-                    .WithMessage("Password should contain at least one digit")
+                    .WithMessage("Password should contain at least one digit");
         }
     }
 }
