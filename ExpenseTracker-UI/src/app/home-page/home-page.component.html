@@ -1,0 +1,53 @@
+<app-navbar></app-navbar>
+<div class="d-flex">
+    <button type="button" class="card w-25 mx-3 my-2" style="width: 18rem;" *ngFor="let account of accounts">
+        <div class="card-body">
+            <h6 class="card-subtitle text-muted">{{account.name}}</h6>
+            <p class="card-text">RON {{account.balance}}</p>
+        </div>
+    </button>
+    <button type="button" class="card w-25 mx-3 my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <div class="card-body">
+            <p class="card-text p-2"> + Add Account</p>
+        </div>
+    </button>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Account</h1>
+                </div>
+                <form [formGroup]="form" class="modal-content p-3">
+                    <div class="d-flex">
+                        <div class="form-group flex-1 mb-3 w-75">
+                            <label for="accountNameInput">Name</label>
+                            <input class="form-control" formControlName="name" id="accountName"
+                                placeholder="Account Name">
+                        </div>
+                        <div class="form-group flex-1 mb-3 ms-2 w-25">
+                            <label for="confirmPassInput">Color</label>
+                            <input class="form-control" id="color">
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="form-group flex-1 mb-3 w-75">
+                            <label for="passInput">Starting Amount</label>
+                            <input type="number" class="form-control" formControlName="amount"
+                                id="startingInput" placeholder="0">
+                        </div>
+                        <div class="form-group flex-1 mb-3 ms-2 w-25">
+                            <label for="confirmPassInput">Currency</label>
+                            <div type="password" class="form-control" id="CurrencyInput">RON
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="addAccount()" data-bs-dismiss="modal">Create Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

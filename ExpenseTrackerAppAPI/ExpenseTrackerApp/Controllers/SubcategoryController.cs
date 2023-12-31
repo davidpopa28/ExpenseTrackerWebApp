@@ -70,10 +70,10 @@ namespace ExpenseTrackerApp.Controllers
             return Ok(subcategories);
         }
 
-        [HttpPost]
+        [HttpPost("{categoryId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateSubcategory([FromQuery] int categoryId, [FromBody] SubcategoryDTO subcategoryCreate)
+        public IActionResult CreateSubcategory(int categoryId, [FromBody] SubcategoryDTO subcategoryCreate)
         {
             if(subcategoryCreate == null)
             {
@@ -105,7 +105,7 @@ namespace ExpenseTrackerApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully created!");
+            return Ok();
         }
 
         [HttpPut("{subcategoryId}")]

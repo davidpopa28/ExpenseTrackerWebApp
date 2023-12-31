@@ -89,7 +89,7 @@ namespace ExpenseTrackerApp.Controllers
             }
 
 
-            return Ok("Succesfully created!");
+            return Ok();
         }
 
         [HttpPut("{categoryId}")]

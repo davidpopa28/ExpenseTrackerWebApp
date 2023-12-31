@@ -19,13 +19,13 @@ namespace ExpenseTrackerApp.Data
             modelBuilder.Entity<UserAccount>()
                 .HasKey(ua => new {ua.UserId, ua.AccountId});
             modelBuilder.Entity<UserAccount>()
-                .HasOne(u => u.User)
-                .WithMany(ua => ua.UserAccounts)
-                .HasForeignKey(u => u.UserId);
+                .HasOne(ua => ua.User)
+                .WithMany(u => u.UserAccounts)
+                .HasForeignKey(ua => ua.UserId);
             modelBuilder.Entity<UserAccount>()
-                .HasOne(a => a.Account)
-                .WithMany(ua => ua.UserAccounts)
-                .HasForeignKey(a => a.AccountId);
+                .HasOne(ua => ua.Account)
+                .WithMany(a => a.UserAccounts)
+                .HasForeignKey(ua => ua.AccountId);
         }
     }
 }

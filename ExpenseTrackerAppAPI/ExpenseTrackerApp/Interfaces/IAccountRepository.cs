@@ -10,7 +10,7 @@ namespace ExpenseTrackerApp.Interfaces
         bool CreateAccount(int userId, Account account);
         bool Save();
         bool AccountExists(int id);
-        bool UpdateAccount(int userId, Account account);
+        bool UpdateAccount(Account account);
         bool DeleteAccount(Account account);
     }
 }

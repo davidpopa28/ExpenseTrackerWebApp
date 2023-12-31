@@ -59,7 +59,7 @@ namespace ExpenseTrackerApp.Repositories
             return saved > 0 ? true : false;
         }
 
-        public bool UpdateAccount(int userId, Account account)
+        public bool UpdateAccount(Account account)
         {
             _context.Update(account);
             return Save();

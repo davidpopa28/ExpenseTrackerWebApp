@@ -68,7 +68,7 @@ namespace ExpenseTrackerApp.Controllers
                     var claims = identity.Claims;
                     int userId = int.Parse(claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
 
-                    var user = _userRepository.GetUser(userId);
+                    var user = _mapper.Map<UserDTO>(_userRepository.GetUser(userId));
                     return Ok(user);
                 }
                 return new NotFoundResult();

@@ -99,11 +99,10 @@ namespace ExpenseTrackerApp.Controllers
             return Ok(records);
         }
 
-        [HttpPost]
+        [HttpPost("{userId}/{accountId}/{subcategoryId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateRecord([FromQuery] int accountId, [FromQuery] int subcategoryId,
-            [FromQuery] int userId, [FromBody] RecordDTO recordCreate)
+        public IActionResult CreateRecord(int accountId, int subcategoryId, int userId, RecordDTO recordCreate)
         {
             if(recordCreate == null)
             {
@@ -127,7 +126,7 @@ namespace ExpenseTrackerApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully created!");
+            return Ok();
         }
 
         [HttpPut("{recordId}")]

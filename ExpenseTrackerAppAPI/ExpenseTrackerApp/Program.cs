@@ -18,9 +18,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: policyName, 
         policy =>
         {
-            policy.WithOrigins("https://localhost:7199/");
-            policy.WithMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS");
-            policy.WithHeaders("Access-Control-Allow-Headers", "Authorization", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers");
+            //policy.WithOrigins("http://localhost:4200");
+            policy.AllowAnyOrigin();
+            policy.AllowAnyMethod();
+            policy.AllowAnyHeader();
+
+            //policy.WithMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS");
+            //policy.WithHeaders("Access-Control-Allow-Headers", "Authorization", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers");
+
         });
 });
 // Add services to the container.
@@ -101,6 +106,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(policyName);
 
 app.UseAuthentication();
 app.UseAuthorization();

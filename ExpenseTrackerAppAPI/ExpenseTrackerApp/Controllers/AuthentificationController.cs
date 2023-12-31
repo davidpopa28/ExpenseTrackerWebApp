@@ -13,9 +13,9 @@ using System.Text;
 
 namespace ExpenseTrackerApp.Controllers
 {
-    [Controller]
     [Route("/api/[controller]")]
-    public class AuthentificationController : ControllerBase
+    [ApiController]
+    public class AuthentificationController : Controller
     {
         private readonly IConfiguration _config;
         private readonly IUserRepository _userRepository;
@@ -32,7 +32,7 @@ namespace ExpenseTrackerApp.Controllers
             _context = context; 
             _validator = validator;
         }
-        [HttpPost("/signup")]
+        [HttpPost("signup")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult SignUp([FromBody] UserDTO userCreate)
@@ -66,11 +66,11 @@ namespace ExpenseTrackerApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully created!");
+            return Ok();
         }
 
         [AllowAnonymous]
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public IActionResult Login([FromBody] UserLogin userLogin)
         {
             try
@@ -107,7 +107,7 @@ namespace ExpenseTrackerApp.Controllers
             var token = new JwtSecurityToken(_config["JWT:Issuer"],
                 _config["JWT:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(10),
+                expires: DateTime.Now.AddMinutes(1440),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

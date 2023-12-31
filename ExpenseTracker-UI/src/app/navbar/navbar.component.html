@@ -1,1 +1,33 @@
-<p>navbar works!</p>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid p-3">
+      <div class="navbar-brand" href="#">Wallet</div>
+      <div class="me-2">by dave</div>
+      <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/accounts">Accounts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/records">Records</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Analytics</a>
+          </li>
+      </ul>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto me-2">
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary btn-round rounded-circle">+ Record</button>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">User</a>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" (click)="logout()" >Log Out</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>

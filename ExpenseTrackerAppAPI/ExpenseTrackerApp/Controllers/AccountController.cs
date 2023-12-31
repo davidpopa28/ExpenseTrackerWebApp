@@ -71,10 +71,10 @@ namespace ExpenseTrackerApp.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateAccount([FromQuery] int userId, [FromBody] AccountDTO accountCreate)
+        public IActionResult CreateAccount(int userId, [FromBody] AccountDTO accountCreate)
         {
             if(accountCreate == null)
             {
@@ -94,14 +94,14 @@ namespace ExpenseTrackerApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully created!");
+            return Ok();
         }
 
         [HttpPut("{accountId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateAccount(int accountId, [FromQuery] int userId, [FromBody] AccountDTO updatedAccount)
+        public IActionResult UpdateAccount(int accountId, [FromBody] AccountDTO updatedAccount)
         {
             if(updatedAccount == null)
             {
@@ -125,7 +125,7 @@ namespace ExpenseTrackerApp.Controllers
 
             var accountMap = _mapper.Map<Account>(updatedAccount);
 
-            if(!_accountRepository.UpdateAccount(userId, accountMap))
+            if(!_accountRepository.UpdateAccount(accountMap))
             {
                 ModelState.AddModelError("", "Something went wrong while updating!");
                 return StatusCode(500, ModelState);
