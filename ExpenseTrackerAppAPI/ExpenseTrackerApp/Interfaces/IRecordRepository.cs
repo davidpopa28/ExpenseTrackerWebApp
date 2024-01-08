@@ -6,7 +6,7 @@ namespace ExpenseTrackerApp.Interfaces
     {
         ICollection<Record> GetAllRecords();
         Record GetRecord(int id);
-        ICollection<Record> GetRecordsBySubcategories(int subcategoryId);
+        ICollection<Record> GetRecordsBySubcategoryAndUser(int subcategoryId, int userId);
         ICollection<Record> GetRecordsByAccount(int accountId);
         ICollection<Record> GetRecordsByUser(int userId);
         bool RecordExists(int recordId);

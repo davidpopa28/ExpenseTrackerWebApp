@@ -56,12 +56,12 @@ namespace ExpenseTrackerApp.Controllers
 
             return Ok(record);
         }
-        [HttpGet("recordsBySubcategory/{subcategoryId}")]
+        [HttpGet("recordsBySubcategory/{subcategoryId}/{userId}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Record>))]
         [ProducesResponseType(400)]
-        public IActionResult GetRecordsBySubcategories(int subcategoryId)
+        public IActionResult GetRecordsBySubcategoriesAndUser(int subcategoryId, int userId)
         {
-            var records = _mapper.Map<List<Record>>(_recordRepository.GetRecordsBySubcategories(subcategoryId));
+            var records = _mapper.Map<List<Record>>(_recordRepository.GetRecordsBySubcategoryAndUser(subcategoryId, userId));
 
             if(!ModelState.IsValid)
             {
@@ -128,12 +128,9 @@ namespace ExpenseTrackerApp.Controllers
             var account = _accountRepository.GetAccount(accountId);
             if (recordMap.Type == "Expense")
             {
-                account.Balance -= recordMap.Value;
+                recordMap.Value = -Math.Abs(recordMap.Value);
             }
-            else
-            {
-                account.Balance += recordMap.Value;
-            }
+            account.Balance += recordMap.Value;
             _accountRepository.UpdateAccount(account);
             return Ok();
         }

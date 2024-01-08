@@ -45,12 +45,12 @@ namespace ExpenseTrackerApp.Repositories
                 .Where(r => r.Account.Id == accountId).ToList();
         }
 
-        public ICollection<Record> GetRecordsBySubcategories(int subcategoryId)
+        public ICollection<Record> GetRecordsBySubcategoryAndUser(int subcategoryId, int userId)
         {
             return _context.Records
                 .Include(r => r.Account).Include(r => r.User)
                 .Include(r => r.Subcategory)
-                .Where(r => r.Subcategory.Id == subcategoryId).ToList();
+                .Where(r => r.Subcategory.Id == subcategoryId).Where(r=> r.User.Id == userId).ToList();
         }
 
         public ICollection<Record> GetRecordsByUser(int userId)

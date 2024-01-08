@@ -36,13 +36,13 @@ export class HomePageComponent{
   constructor(private accountService: AccountService, public service: GlobalService, private router: Router,
     private userService: UserService, private recordService: RecordService) {
     this.recordsToHomePageSubscription = this.recordService.recordsToHomePage$.subscribe(records => {
-      this.records=records;
+      this.records=records.reverse();
 
       this.incomeRecords = records.filter(record => record.type === 'Income');
       this.expenseRecords = records.filter(record => record.type === 'Expense');
 
       this.incomeRecords.sort((a, b) => b.value - a.value);
-      this.expenseRecords.sort((a, b) => b.value - a.value);
+      this.expenseRecords.sort((b, a) => b.value - a.value);
     });
     this.getAccountsByUser();
   }
@@ -58,13 +58,13 @@ export class HomePageComponent{
       })
 
       this.recordService.getRecordsByUser(this.currentUser.id).subscribe(res => {
-        this.records = res.reverse();
+        this.records = res;
 
         this.incomeRecords = res.filter(record => record.type === 'Income');
         this.expenseRecords = res.filter(record => record.type === 'Expense');
 
         this.incomeRecords.sort((a, b) => b.value - a.value);
-        this.expenseRecords.sort((a, b) => b.value - a.value);
+        this.expenseRecords.sort((b, a) => b.value - a.value);
         this.isLoading=false;
       })
     })

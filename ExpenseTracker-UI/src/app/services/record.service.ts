@@ -40,7 +40,7 @@ export class RecordService {
       .pipe(tap(records=>this.recordsSubject.next(records)));
   }
 
-  getRecordsBySubcategories(subcategoryId: number): Observable<Record[]> {
-    return this.httpClient.get<Record[]>(`${this.baseURL}${this.apiPath}/recordsBySubcategory/${subcategoryId}`);
+  getRecordsBySubcategoriesAndUser(subcategoryId: number, userId: number): Observable<Record[]> {
+    return this.httpClient.get<Record[]>(`${this.baseURL}${this.apiPath}/recordsBySubcategory/${subcategoryId}/${userId}`);
   }
 }

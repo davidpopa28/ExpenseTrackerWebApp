@@ -2,20 +2,20 @@
 <div class="d-flex bg-dark">
     <div class="w-25 mh-100 mt-5 mb-5 ms-5 me-2 bg-dark-subtle rounded">
         <div class="p-3 ps-4">
-            <h3>Analytics</h3>
+          <h3>Analytics</h3>
         </div>
         <div class="p-3 ps-4">
-            <h5>Here you can see the analysis of all your records</h5>
+          <h5>Here you can see the analysis of all your records</h5>
         </div>
         <ul class="list-group">
-            <li class="list-group-item mx-4 my-2 rounded bg-secondary-subtle" *ngFor="let category of categories">
-                <input type="radio" [id]="'checkbox-' + category.id" [name]="'accountRadio'" (click)="selectCategory(category.id)">
-                <label class="ps-2 form-check-label fw-bold" [for]="'checkbox-' + category.id">
-                    {{ category.name }}
-                </label>
-            </li>
+          <li class="list-group-item mx-4 my-2 rounded">
+            <button class="btn fw-bold" (click)="selectCategory(0)">All Categories</button>
+          </li>      
+          <li *ngFor="let category of categories" class="list-group-item mx-4 my-2 rounded">
+            <button class="btn fw-bold" (click)="selectCategory(category.id)">{{ category.name }}</button>
+          </li>
         </ul>
-    </div>
+      </div>
 
     <div class="d-flex w-75 min-vh-100 mt-5 mb-5 me-5 ms-2 bg-dark-subtle rounded">
         <div class="p-3 w-100">
@@ -23,37 +23,38 @@
                 No records, yet. Add one!
             </div>
             <div *ngIf="records.length !== 0">
-                <ul class="list-group" *ngFor="let record of records">
+                <ul class="list-group" *ngFor="let category of categories">
                     <div class="my-2">
-                        <li class="list-group-item">
-                            <div class="form-check">
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex">
-                                        <div class="fst-normal form-check-label p-2" for="flexCheckDefault">
-                                            {{record.subcategory.name}}
-                                        </div>
-                                        <div class="fw-bold form-check-label p-2" for="flexCheckDefault">
-                                            {{record.account.name}}
-                                        </div>
-                                        <div class="fw-normal form-check-label p-2" for="flexCheckDefault">
-                                            {{record.note}}
-                                        </div>
-                                        <div class="fw-light form-check-label p-2" for="flexCheckDefault">
-                                            added by {{record.user.name}}
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <label class="fw-bolder form-check-label p-2"
-                                            [ngClass]="{'text-success': record.type === 'Income', 'text-danger': record.type === 'Expense'}"
-                                            for="flexCheckDefault">
-                                            {{record.value}} RON
-                                        </label>
-                                    </div>
+                        <li class="list-group-item rounded">
+                          <div class="form-check">
+                              <div class="d-flex justify-content-between">
+                                <div class="fst-normal form-check-label p-2" for="flexCheckDefault" (click)="selectCategory(category.id)">
+                                  {{category.name}}
+                                </div>
+                                <div class="fw-bold form-check-label p-2 pe-5" for="flexCheckDefault">
+                                  {{category.value}}
                                 </div>
                             </div>
+                          </div>
+                          <ul *ngIf="selectedCategoryId === category.id" class="list-group">
+                            <li *ngFor="let subcategory of subcategories" class="list-group-item">
+                                  <div class="d-flex justify-content-between">
+                                    <div class="fst-normal form-check-label p-2" for="flexCheckDefault" (click)="selectSubcategory(subcategory.id)">
+                                      {{subcategory.name}}
+                                    </div>
+                                    <div class="fw-bold form-check-label p-2 pe-5" for="flexCheckDefault">
+                                      {{subcategory.value}}
+                                    </div>
+                              </div>
+                            </li>
+                          </ul>
                         </li>
-                    </div>
-                </ul>
+                      </div>
+
+
+
+
+                  </ul>
             </div>
         </div>
     </div>

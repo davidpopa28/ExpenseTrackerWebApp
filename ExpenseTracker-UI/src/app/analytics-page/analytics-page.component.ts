@@ -29,6 +29,7 @@ export class AnalyticsPageComponent {
   currentUser: User = {} as User;
   selectedAccountId : number | null = null;
   allaccounts: Account[] =[];
+  selectedCategoryId: number | null = null;
 
 
   constructor(private categoryService: CategoryService, private recordService: RecordService, private userService:UserService) {
@@ -41,10 +42,6 @@ export class AnalyticsPageComponent {
       this.categories=res;
     })
   }
-  selectCategory(categoryId: number) {
-
-  }
-
   getCurrentUser() {
     this.userService.getCurrentUser().subscribe(res =>{
       this.currentUser=res;
@@ -53,8 +50,27 @@ export class AnalyticsPageComponent {
       })
     })
   }
-
-  getValueFromSubcat() {
-
+  selectCategory(categoryId: number) {
+    if (this.selectedCategoryId === categoryId) {
+      this.subcategories = [];
+      this.selectedCategoryId = null;
+    } else {
+      this.selectedCategoryId = categoryId;
+      this.categoryService.getSubcategoriesByCategory(categoryId).subscribe(subcategories => {
+        this.subcategories = subcategories;
+      });
+    }
   }
+
+  selectSubcategory(subcategoryId: number) {
+    this.userService.getCurrentUser().subscribe(res =>{
+      this.currentUser=res;
+      this.recordService.getRecordsBySubcategoriesAndUser(subcategoryId, this.currentUser.id) 
+      .subscribe(records => {
+        this.records = records;
+      });
+    })
+  }
+
+
 }
