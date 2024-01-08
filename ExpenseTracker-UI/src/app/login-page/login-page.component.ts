@@ -26,15 +26,11 @@ export class LoginPageComponent {
     let userLogin: UserLogin = {
       email: this.form.controls['email'].value,
       password: this.form.controls['password'].value,
-    }
-    console.log(this.form.controls['email'].value);
-    console.log(this.form.controls['password'].value);
-    
+    }    
     this.loginService.login(userLogin).subscribe((res: Token) => {
-      console.log(res);
-      localStorage.setItem("token", res.token)
+      localStorage.setItem("token", res.token);
+      this.service.setLogIn(true);
+      this.router.navigate(['/home']);
     })
-    this.service.setLogIn(true);
-    this.router.navigate(['/home']);
   }
 }

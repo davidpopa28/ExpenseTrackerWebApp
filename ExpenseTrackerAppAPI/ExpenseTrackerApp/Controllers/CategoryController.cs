@@ -26,7 +26,8 @@ namespace ExpenseTrackerApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetCategories()
         {
-            var categories = _mapper.Map<List<CategoryDTO>>(_categoryRepository.GetCategories());
+            var categories = _mapper.Map<List<Category>>(_categoryRepository.GetCategories());
+
 
             if (!ModelState.IsValid)
             {
@@ -45,7 +46,7 @@ namespace ExpenseTrackerApp.Controllers
                 return NotFound();
             }
 
-            var category = _mapper.Map<CategoryDTO>(_categoryRepository.GetCategory(categoryId));
+            var category = _mapper.Map<Category>(_categoryRepository.GetCategory(categoryId));
 
             if (!ModelState.IsValid)
             {

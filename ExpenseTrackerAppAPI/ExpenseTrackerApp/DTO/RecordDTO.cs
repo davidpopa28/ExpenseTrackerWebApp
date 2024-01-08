@@ -8,7 +8,7 @@ namespace ExpenseTrackerApp.DTO
 
         //record type meaning income or expense
         public string Type { get; set; }
-        public decimal Value { get; set; }
+        public double Value { get; set; }
         public string Note { get; set; }
         public DateTime DateTime { get; set; }
     }

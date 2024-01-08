@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackerApp.Data;
 using ExpenseTrackerApp.Interfaces;
 using ExpenseTrackerApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerApp.Repositories
 {
@@ -31,7 +32,16 @@ namespace ExpenseTrackerApp.Repositories
 
         public ICollection<Subcategory> GetSubcategoriesByCategory(int categoryid)
         {
-            return _context.Subcategories.Where(s => s.Category.Id == categoryid).ToList();
+            var subcategories = _context.Subcategories.Where(s => s.Category.Id == categoryid).ToList();
+
+            foreach (var subcategory in subcategories)
+            {
+                subcategory.Value = _context.Records
+                    .Where(r => r.Subcategory.Id == subcategory.Id)
+                    .Sum(r => r.Value);
+            }
+
+            return subcategories;
         }
 
         public Subcategory GetSubcategory(int id)

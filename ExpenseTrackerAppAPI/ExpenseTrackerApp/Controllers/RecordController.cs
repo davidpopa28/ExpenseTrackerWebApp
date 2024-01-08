@@ -61,7 +61,7 @@ namespace ExpenseTrackerApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetRecordsBySubcategories(int subcategoryId)
         {
-            var records = _mapper.Map<List<RecordDTO>>(_recordRepository.GetRecordsBySubcategories(subcategoryId));
+            var records = _mapper.Map<List<Record>>(_recordRepository.GetRecordsBySubcategories(subcategoryId));
 
             if(!ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace ExpenseTrackerApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetRecordsByAccount(int accountId)
         {
-            var records = _mapper.Map<List<RecordDTO>>(_recordRepository.GetRecordsByAccount(accountId));
+            var records = _mapper.Map<List<Record>>(_recordRepository.GetRecordsByAccount(accountId));
 
             if (!ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace ExpenseTrackerApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetRecordsByUser(int userId)
         {
-            var records = _mapper.Map<List<RecordDTO>>(_recordRepository.GetRecordsByUser(userId));
+            var records = _mapper.Map<List<Record>>(_recordRepository.GetRecordsByUser(userId));
 
             if (!ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace ExpenseTrackerApp.Controllers
         [HttpPost("{userId}/{accountId}/{subcategoryId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateRecord(int accountId, int subcategoryId, int userId, RecordDTO recordCreate)
+        public IActionResult CreateRecord(int accountId, int subcategoryId, int userId, [FromBody] RecordDTO recordCreate)
         {
             if(recordCreate == null)
             {
@@ -125,7 +125,16 @@ namespace ExpenseTrackerApp.Controllers
                 ModelState.AddModelError("", "Something went wrong!");
                 return StatusCode(500, ModelState);
             }
-
+            var account = _accountRepository.GetAccount(accountId);
+            if (recordMap.Type == "Expense")
+            {
+                account.Balance -= recordMap.Value;
+            }
+            else
+            {
+                account.Balance += recordMap.Value;
+            }
+            _accountRepository.UpdateAccount(account);
             return Ok();
         }
 
@@ -144,25 +153,40 @@ namespace ExpenseTrackerApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if(!_recordRepository.RecordExists(recordId))
+            var record = _recordRepository.GetRecord(recordId);
+            if (!_recordRepository.RecordExists(record.Id))
             {
                 return NotFound();
             }
-
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var account = record.Account;
+            if(record.Type == "Expense" && updatedRecord.Type == "Expense")
+            {
+                account.Balance -= (updatedRecord.Value - record.Value);
+            }
+            else if (record.Type == "Income" && updatedRecord.Type == "Income")
+            {
+                account.Balance += (updatedRecord.Value - record.Value);
+            }
+            else if (record.Type == "Expense" && updatedRecord.Type == "Income")
+            {
+                account.Balance = account.Balance + record.Value + updatedRecord.Value;
+            }
+            else if (record.Type == "Income" && updatedRecord.Type == "Expense")
+            {
+                account.Balance = account.Balance - record.Value - updatedRecord.Value;
+            }
+            _mapper.Map(updatedRecord, record);
 
-            var recordMap = _mapper.Map<Record>(updatedRecord);
-
-            if(!_recordRepository.UpdateRecord(recordMap))
+            if(!_recordRepository.UpdateRecord(record))
             {
                 ModelState.AddModelError("", "Something went wrong while updating!");
                 return StatusCode(500, ModelState);
             }
-
+            _accountRepository.UpdateAccount(account);
             return NoContent();
         }
 
@@ -172,19 +196,29 @@ namespace ExpenseTrackerApp.Controllers
         [ProducesResponseType(404)]
         public IActionResult DeleteRecord(int recordId)
         {
+
             if (!_recordRepository.RecordExists(recordId))
             {
                 return NotFound();
             }
 
-            var recordToDelete = _recordRepository.GetRecord(recordId);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var record = _recordRepository.GetRecord(recordId);
+            var account = record.Account;
+            if (record.Type == "Expense")
+            {
+                account.Balance += record.Value;
+            }
+            else
+            {
+                account.Balance -= record.Value;
+            }
+            _accountRepository.UpdateAccount(account);
 
-            if (!_recordRepository.DeleteRecord(recordToDelete))
+            if (!_recordRepository.DeleteRecord(record))
             {
                 ModelState.AddModelError("", "Something went wrong while deleting!");
             }

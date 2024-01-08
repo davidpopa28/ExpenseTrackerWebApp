@@ -2,6 +2,7 @@
 using ExpenseTrackerApp.DTO;
 using ExpenseTrackerApp.Interfaces;
 using ExpenseTrackerApp.Models;
+using ExpenseTrackerApp.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,11 @@ namespace ExpenseTrackerApp.Controllers
         private readonly IUserRepository _userRepository;
         private readonly AbstractValidator<User> _validator;
         private readonly IMapper _mapper;
+        private readonly IAccountRepository _accountRepository;
 
-        public UserController(IUserRepository userRepository, IMapper mapper, AbstractValidator<User> validator)
+        public UserController(IUserRepository userRepository, IMapper mapper, AbstractValidator<User> validator, IAccountRepository accountRepository)
         {
+            _accountRepository = accountRepository;
             _userRepository = userRepository;
             _validator = validator;
             _mapper = mapper;
@@ -54,6 +57,25 @@ namespace ExpenseTrackerApp.Controllers
 
             return Ok(user);
         }
+        [HttpGet("getUserByEmail/{email}")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400)]
+        public IActionResult GetUserByEmail(string email)
+        {
+            var user =_mapper.Map<UserDTO>(_userRepository.GetUserByEmail(email));
+            if (!_userRepository.UserExists(user.Id))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(user);
+        }
+
 
         [HttpGet("current")]
         [Authorize]
@@ -98,6 +120,20 @@ namespace ExpenseTrackerApp.Controllers
 
             return Ok(users);
         }
+        [HttpGet("userRole/{accountId}/{userId}")]
+        [ProducesResponseType(200, Type = typeof(UserRole))]
+        [ProducesResponseType(400)]
+        public IActionResult GetRoleByUserIdAccountId(int accountId, int userId)
+        {
+            var role = _accountRepository.GetUserRoleByAccountIdAndUserId(accountId, userId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(role);
+        }
+
+
 
         [HttpPut("{userId}")]
         public IActionResult UpdateUser(int userId, [FromBody] UserDTO updatedUser)

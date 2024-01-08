@@ -19,11 +19,12 @@ namespace ExpenseTrackerApp.Repositories
 
         public bool CreateAccount(int userId, Account account)
         {
-            var accountUserEntity = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
             var accountUser = new UserAccount()
             {
-                User = accountUserEntity,
+                User = user,
                 Account = account,
+                UserRole = 0
             };
 
             _context.Add(accountUser);
@@ -63,6 +64,40 @@ namespace ExpenseTrackerApp.Repositories
         {
             _context.Update(account);
             return Save();
+        }
+
+        public bool AddUserToAccount(int userId, int accountId, UserRole userRole)
+        {
+            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            var account = _context.Accounts.Where(a => a.Id == accountId).FirstOrDefault();
+            var accountUser = new UserAccount()
+            {
+                User = user,
+                Account = account,
+                UserRole = userRole,
+            };
+
+            _context.Add(accountUser);
+            return Save();
+        }
+
+        public bool RemoveUserFromAccount(int userId, int accountId)
+        {
+            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            var account = _context.Accounts.Where(a => a.Id == accountId).FirstOrDefault();
+            var accountUser = new UserAccount()
+            {
+                User = user,
+                Account = account,
+            };
+            _context.Remove(accountUser);
+            return Save();
+        }
+
+        public UserRole GetUserRoleByAccountIdAndUserId(int accountId, int userId)
+        {
+            var userAccount = _context.UserAccounts.Where(ua => ua.AccountId ==  accountId).Where(ua => ua.UserId == userId).Select(ua => ua.UserRole).FirstOrDefault();
+            return userAccount;
         }
     }
 }

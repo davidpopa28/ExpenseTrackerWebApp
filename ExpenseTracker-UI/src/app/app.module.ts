@@ -12,6 +12,7 @@ import { GlobalComponent } from './global/global.component';
 import { HttpInterceptorService } from './services/htpp-interceptor.service';
 import { RecordsPageComponent } from './records-page/records-page.component';
 import { AccountsPageComponent } from './accounts-page/accounts-page.component';
+import { AnalyticsPageComponent } from './analytics-page/analytics-page.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AccountsPageComponent } from './accounts-page/accounts-page.component';
     RegisterPageComponent,
     GlobalComponent,
     RecordsPageComponent,
-    AccountsPageComponent
+    AccountsPageComponent,
+    AnalyticsPageComponent
   ],
   imports: [
     BrowserModule,

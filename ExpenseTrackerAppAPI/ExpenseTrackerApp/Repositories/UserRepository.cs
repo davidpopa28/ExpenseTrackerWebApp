@@ -29,6 +29,11 @@ namespace ExpenseTrackerApp.Repositories
             return _context.Users.Where(u => u.Id == id).FirstOrDefault();
         }
 
+        public User GetUserByEmail(string email)
+        {
+            return _context.Users.Where(u => u.Email == email).FirstOrDefault();
+        }
+
         public ICollection<User> GetUsers()
         {
             return _context.Users.OrderBy(u => u.Id).ToList();

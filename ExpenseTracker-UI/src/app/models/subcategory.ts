@@ -5,4 +5,5 @@ export interface Subcategory {
     name: string;
     category: Category;
     records: Record[];
+    value: number;
 }

@@ -134,15 +134,25 @@ namespace ExpenseTrackerApp.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{accountId}")]
+        [HttpDelete("{accountId}/{userId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult DeleteAccount(int accountId)
+        public IActionResult DeleteAccount(int accountId, int userId)
         {
             if(!_accountRepository.AccountExists(accountId))
             {
                 return NotFound();
+            }
+
+            if (!_userRepository.UserExists(userId))
+            {
+                return NotFound();
+            }
+
+            if (_accountRepository.GetUserRoleByAccountIdAndUserId(accountId, userId) == UserRole.Member)
+            {
+                return BadRequest(ModelState);
             }
 
             var accountToDelete= _accountRepository.GetAccount(accountId);
@@ -155,6 +165,64 @@ namespace ExpenseTrackerApp.Controllers
             if(!_accountRepository.DeleteAccount(accountToDelete))
             {
                 ModelState.AddModelError("", "Something went wrong while deleting!");
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("associateAccount/{accountId}/{userId}/{userRole}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult AssociateAccount(int userId, int accountId, UserRole userRole)
+        {
+            if (!_userRepository.UserExists(userId))
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_accountRepository.AccountExists(accountId))
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_accountRepository.AddUserToAccount(userId, accountId, userRole))
+            {
+                ModelState.AddModelError("", "Something went wrong!");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+        [HttpDelete("disassociateAccount/{userId}/{accountId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DisassociateAccount(int userId, int accountId)
+        {
+            if (!_userRepository.UserExists(userId))
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_accountRepository.AccountExists(accountId))
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_accountRepository.RemoveUserFromAccount(userId, accountId))
+            {
+                ModelState.AddModelError("", "Something went wrong!");
+                return StatusCode(500, ModelState);
             }
 
             return NoContent();

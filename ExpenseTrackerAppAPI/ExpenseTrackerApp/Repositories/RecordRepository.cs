@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackerApp.Data;
 using ExpenseTrackerApp.Interfaces;
 using ExpenseTrackerApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerApp.Repositories
 {
@@ -31,22 +32,34 @@ namespace ExpenseTrackerApp.Repositories
 
         public Record GetRecord(int id)
         {
-            return _context.Records.Where(r => r.Id == id).FirstOrDefault();
+            return _context.Records
+                .Include(r => r.Account)
+                .Include(r => r.User)
+                .Include(r => r.Subcategory)
+                .Where(r => r.Id == id).FirstOrDefault();
         }
 
         public ICollection<Record> GetRecordsByAccount(int accountId)
         {
-            return _context.Records.Where(r => r.Account.Id == accountId).ToList();
+            return _context.Records.Include(r => r.Account).Include(r => r.User).Include(r => r.Subcategory)
+                .Where(r => r.Account.Id == accountId).ToList();
         }
 
         public ICollection<Record> GetRecordsBySubcategories(int subcategoryId)
         {
-            return _context.Records.Where(r => r.Subcategory.Id == subcategoryId).ToList();
+            return _context.Records
+                .Include(r => r.Account).Include(r => r.User)
+                .Include(r => r.Subcategory)
+                .Where(r => r.Subcategory.Id == subcategoryId).ToList();
         }
 
         public ICollection<Record> GetRecordsByUser(int userId)
         {
-            return _context.Records.Where(r => r.User.Id == userId).ToList();
+            return _context.Records
+                .Include(r => r.Account)
+                .Include(r => r.User)
+                .Include(r => r.Subcategory)
+                .Where(r => r.User.Id == userId).ToList();
         }
 
         public bool RecordExists(int recordId)

@@ -7,6 +7,7 @@ namespace ExpenseTrackerApp.Interfaces
         ICollection<User> GetUsers();
         User GetUser(int id);
         ICollection<User> GetUsersByAccount(int accountId);
+        User GetUserByEmail(string email);
         bool UserExists(int userId);
         bool CreateUser(User user);
         bool UpdateUser(User user);

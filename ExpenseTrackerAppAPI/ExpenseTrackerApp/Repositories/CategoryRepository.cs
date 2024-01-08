@@ -30,7 +30,18 @@ namespace ExpenseTrackerApp.Repositories
 
         public ICollection<Category> GetCategories()
         {
-            return _context.Categories.OrderBy(c => c.Id).ToList();
+            var categories = _context.Categories.OrderBy(c => c.Id).ToList();
+
+            foreach (var category in categories)
+            {
+                category.Value = _context.Subcategories
+                    .Where(s => s.Category.Id == category.Id)
+                    .SelectMany(s => s.Records)
+                    .Sum(s => s.Value);
+            }
+
+            return categories;
+
         }
 
         public Category GetCategory(int id)

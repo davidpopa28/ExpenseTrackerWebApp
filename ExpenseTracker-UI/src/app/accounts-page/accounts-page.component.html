@@ -1,37 +1,48 @@
 <app-navbar></app-navbar>
-<div class="d-flex">
-    <div class="w-25 mt-5 mb-5 ms-5 me-2 bg-light rounded">
+<div class="d-flex bg-dark min-vh-100">
+    <div class="w-25 mt-5 mb-5 ms-5 me-2 bg-dark-subtle rounded">
         <div class="p-3">
             <h3>Accounts</h3>
         </div>
     </div>
 
-    <div class="d-flex w-75 mt-5 mb-5 me-5 ms-2 bg-light rounded">
+    <div class="d-flex w-75 mt-5 mb-5 me-5 ms-2 bg-dark-subtle rounded">
         <div class="p-3 w-100">
             <ul class="list-group" *ngFor="let account of accounts">
-                <button type="button" class="btn my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    <li class="list-group-item">
+                <div type="" class="my-2">
+                    <li class="list-group-item rounded">
                         <div class="form-check">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <label class="fw-bold form-check-label pt-2" for="flexCheckDefault">
+                                    <button class="btn fw-bold form-check-label pt-2" for="flexCheckDefault"
+                                        data-bs-toggle="modal" [attr.data-bs-target]="'#account'+ account.id">
                                         {{account.name}}
-                                    </label>
+                                    </button>
                                 </div>
                                 <div class="">
                                     <label class="fw-bolder form-check-label pt-2" for="flexCheckDefault">
                                         {{account.balance}} RON
                                     </label>
-                                    <button type="button" class="btn btn-outline-danger ps-2 ms-2"
+                                    <button type="button" class="btn btn-outline-success ms-2" data-bs-toggle="modal"
+                                        [attr.data-bs-target]="'#AddUserModal' + account.id">
+                                        +
+                                    </button>
+                                    <button *ngIf="account.userRole === 1" type="button"
+                                        class="btn btn-outline-warning ms-2 fw-light"
+                                        (click)="LeaveAccount(account.id)">
+                                        Leave account
+                                    </button>
+                                    <button *ngIf="account.userRole === 0" type="button"
+                                        class="btn btn-outline-danger ms-2"
                                         (click)="deleteAccount(account)">Delete</button>
                                 </div>
                             </div>
                         </div>
                     </li>
-                
-                </button>
 
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                </div>
+
+                <div class="modal fade" [id]="'account'+ account.id" data-bs-backdrop="static" data-bs-keyboard="false"
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -71,7 +82,41 @@
                         </div>
                     </div>
                 </div>
-                
+
+
+                <div class="modal fade" [id]="'AddUserModal'+ account.id " data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add another user to
+                                    {{account.name}}!
+                                </h1>
+                            </div>
+                            <form [formGroup]="form2" class="modal-content p-3">
+                                <div class="d-flex">
+                                    <div class="form-group flex-1 mb-3 w-75">
+                                        <label for="accountNameInput">User's email adress</label>
+                                        <input class="form-control" formControlName="email" id="accountName"
+                                            placeholder="Account Name">
+                                    </div>
+                                    <div class="form-group ms-2 w-25">
+                                        <label for="type">Role</label>
+                                        <select class="form-control custom-select" formControlName="role" id="role">
+                                            <option value="0">Owner</option>
+                                            <option value="1">Member</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" (click)="addUserToAccount(account)"
+                                    data-bs-dismiss="modal">Add!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ul>
         </div>
     </div>

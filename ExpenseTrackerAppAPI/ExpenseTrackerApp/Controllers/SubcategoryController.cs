@@ -60,7 +60,8 @@ namespace ExpenseTrackerApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetSubcategoriesByCategory(int categoryId)
         {
-            var subcategories = _mapper.Map<List<SubcategoryDTO>>(_subcategoryRepository.GetSubcategoriesByCategory(categoryId));
+            var subcategories = _mapper.Map<List<Subcategory>>(_subcategoryRepository.GetSubcategoriesByCategory(categoryId));
+            
 
             if(!ModelState.IsValid)
             {

@@ -18,6 +18,8 @@ namespace ExpenseTrackerApp.Helper
             CreateMap<SubcategoryDTO, Subcategory>();
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+            CreateMap<UserAccount, UserAccountDTO>();
+            CreateMap<UserAccountDTO,  UserAccount>();
         }
     }
 }

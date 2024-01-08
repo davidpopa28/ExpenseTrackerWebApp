@@ -54,6 +54,9 @@ namespace ExpenseTrackerApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -80,8 +83,9 @@ namespace ExpenseTrackerApp.Migrations
                     b.Property<int>("SubcategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -114,6 +118,9 @@ namespace ExpenseTrackerApp.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -153,6 +160,9 @@ namespace ExpenseTrackerApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserRole")
                         .HasColumnType("int");
 
                     b.HasKey("UserId", "AccountId");

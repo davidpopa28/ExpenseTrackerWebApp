@@ -7,7 +7,7 @@ export interface Record {
     value: number;
     note: string;
     date: Date;
-    account: Account;
     user: User;
+    account: Account;
     subcategory: Subcategory;
 }

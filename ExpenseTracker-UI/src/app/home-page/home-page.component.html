@@ -1,53 +1,179 @@
 <app-navbar></app-navbar>
-<div class="d-flex">
-    <button type="button" class="card w-25 mx-3 my-2" style="width: 18rem;" *ngFor="let account of accounts">
-        <div class="card-body">
-            <h6 class="card-subtitle text-muted">{{account.name}}</h6>
-            <p class="card-text">RON {{account.balance}}</p>
+<div class="bg-dark min-vh-100">
+    <div class="d-flex bg-dark">
+        <div class="bg-dark-subtle rounded h-25 mt-3 w-25 mx-3" style="width: 18rem;" *ngFor="let account of accounts">
+            <div class="d-flex-row py-2 ps-5">
+                <div class="fw-normal">{{account.name}}</div>
+                <div class="fw-bolder">RON {{account.balance}}</div>
+            </div>
         </div>
-    </button>
-    <button type="button" class="card w-25 mx-3 my-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-        <div class="card-body">
-            <p class="card-text p-2"> + Add Account</p>
+        <div type="button" class="bg-dark-subtle p-1 h-25 mt-3 w-25 mx-3 rounded" data-bs-toggle="modal"
+            data-bs-target="#addAccountModal">
+            <div class="card-body">
+                <p class="text-center pt-2 mt-2"> + Add Account</p>
+            </div>
         </div>
-    </button>
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Account</h1>
-                </div>
-                <form [formGroup]="form" class="modal-content p-3">
-                    <div class="d-flex">
-                        <div class="form-group flex-1 mb-3 w-75">
-                            <label for="accountNameInput">Name</label>
-                            <input class="form-control" formControlName="name" id="accountName"
-                                placeholder="Account Name">
-                        </div>
-                        <div class="form-group flex-1 mb-3 ms-2 w-25">
-                            <label for="confirmPassInput">Color</label>
-                            <input class="form-control" id="color">
-                        </div>
+
+        <div class="modal fade" id="addAccountModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Account</h1>
                     </div>
-                    <div class="d-flex">
-                        <div class="form-group flex-1 mb-3 w-75">
-                            <label for="passInput">Starting Amount</label>
-                            <input type="number" class="form-control" formControlName="amount"
-                                id="startingInput" placeholder="0">
-                        </div>
-                        <div class="form-group flex-1 mb-3 ms-2 w-25">
-                            <label for="confirmPassInput">Currency</label>
-                            <div type="password" class="form-control" id="CurrencyInput">RON
+                    <form [formGroup]="form" class="modal-content p-3">
+                        <div class="d-flex">
+                            <div class="form-group flex-1 mb-3 w-75">
+                                <label for="accountNameInput">Name</label>
+                                <input class="form-control" formControlName="name" id="accountName"
+                                    placeholder="Account Name">
                             </div>
                         </div>
+                        <div class="d-flex">
+                            <div class="form-group flex-1 mb-3 w-75">
+                                <label for="passInput">Starting Amount</label>
+                                <input type="number" class="form-control" formControlName="amount" id="startingInput"
+                                    placeholder="0">
+                            </div>
+                            <div class="form-group flex-1 mb-3 ms-2 w-25">
+                                <label for="confirmPassInput">Currency</label>
+                                <div class="form-control" id="CurrencyInput">RON
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-dark" (click)="addAccount()" data-bs-dismiss="modal">Create
+                            Account</button>
                     </div>
-                </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" (click)="addAccount()" data-bs-dismiss="modal">Create Account</button>
                 </div>
             </div>
         </div>
+    </div>
+
+    
+    <div class="d-flex mt-3">
+        
+        <div class="d-flex m-3">
+            <div class="card bg-dark-subtle">
+                <div class="card-header bg-dark-subtle">
+                    Latest Records
+                </div>
+                <div class="">
+                    <ul class="list-group">
+                        <div *ngIf="records.length > 0; else noRecords">
+                            <li class="list-group-item bg-dark-subtle" *ngFor="let record of records.slice(0,4)">
+                                <div class="form-check">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex-row">
+                                            <div class="fs-5 fst-normal form-check-label" for="flexCheckDefault">
+                                                {{record.subcategory.name}}
+                                            </div>
+                                            <div class="small fw-bold form-check-label" for="flexCheckDefault">
+                                                {{record.account.name}}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <label class="fw-bolder form-check-label p-2 ps-5"
+                                                [ngClass]="{'text-success': record.type === 'Income', 'text-danger': record.type === 'Expense'}">
+                                                {{record.value}} RON
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                        <ng-template #noRecords>
+                            <li class="list-group-item bg-dark-subtle">
+                                No records available.
+                            </li>
+                        </ng-template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+
+
+
+        <div class="d-flex m-3">
+            <div class="card bg-dark-subtle">
+                <div class="card-header bg-dark-subtle">
+                    Top Expense Records
+                </div>
+                <div class="">
+                    <ul class="list-group">
+                        <div *ngIf="expenseRecords.length > 0; else noExpenseRecords">
+                            <li class="list-group-item bg-dark-subtle" *ngFor="let expenseRecord of expenseRecords.slice(0,4)">
+                                <div class="form-check">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex-row">
+                                            <div class="fs-5 fst-normal form-check-label" for="flexCheckDefault">
+                                                {{expenseRecord.subcategory.name}}
+                                            </div>
+                                            <div class="small fw-bold form-check-label" for="flexCheckDefault">
+                                                {{expenseRecord.account.name}}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <label class="fw-bolder form-check-label p-2 ps-5 text-danger">
+                                                {{expenseRecord.value}} RON
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                        <ng-template #noExpenseRecords>
+                            <li class="list-group-item bg-dark-subtle">
+                                No expense records available.
+                            </li>
+                        </ng-template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="d-flex m-3">
+            <div class="card bg-dark-subtle">
+                <div class="card-header bg-dark-subtle">
+                    Top Income Records
+                </div>
+                <div class="">
+                    <ul class="list-group">
+                        <div *ngIf="incomeRecords.length > 0; else noIncomeRecords">
+                            <li class="list-group-item bg-dark-subtle" *ngFor="let incomeRecord of incomeRecords.slice(0,4)">
+                                <div class="form-check">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex-row">
+                                            <div class="fs-5 fst-normal form-check-label" for="flexCheckDefault">
+                                                {{incomeRecord.subcategory.name}}
+                                            </div>
+                                            <div class="small fw-bold form-check-label" for="flexCheckDefault">
+                                                {{incomeRecord.account.name}}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <label class="fw-bolder form-check-label p-2 ps-5 text-success">
+                                                {{incomeRecord.value}} RON
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                        <ng-template #noIncomeRecords>
+                            <li class="list-group-item bg-dark-subtle">
+                                No income records available.
+                            </li>
+                        </ng-template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
